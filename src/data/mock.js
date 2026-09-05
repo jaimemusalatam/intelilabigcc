@@ -12,6 +12,8 @@ export const ORG = {
 
 export const USER = { name: 'Usuario', initials: 'JP', role: 'Responsable de calidad' };
 
+export const AUTH_CREDENTIALS = { email: 'jp.rodriguez@intelilab.pe', password: 'intelilab2026' };
+
 // ---------------------------------------------------------------------------
 // Mapa de procesos
 // ---------------------------------------------------------------------------
@@ -105,7 +107,6 @@ export const NAV_ITEMS = [
   { to: '/nc-capa', label: 'NC / CAPA', icon: 'alerta', badge: 3 },
   { to: '/auditorias', label: 'Auditorías', icon: 'portapapeles' },
   { to: '/revision-direccion', label: 'Revisión Dirección', icon: 'personas' },
-  { to: '/kit', label: 'Sistema de diseño', icon: 'config' },
 ];
 
 // ---------------------------------------------------------------------------
