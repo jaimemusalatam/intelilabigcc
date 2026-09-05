@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '../components/icons';
 import { StatusBadge, ClauseTag } from '../components/Badge';
-import { ALL_PROCESSES, REQUIREMENTS_BY_PROCESS, processStatus } from '../data/mock';
+import { buildSearchIndex, searchByCategory } from '../lib/searchIndex';
 
 const CATEGORIES = [
   { key: 'requisito', label: 'Requisito ISO', icon: 'portapapeles' },
@@ -23,24 +23,9 @@ export default function AuditMode() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('requisito');
+  const index = useMemo(() => buildSearchIndex(), []);
 
-  const requirementEntries = useMemo(
-    () =>
-      Object.entries(REQUIREMENTS_BY_PROCESS).flatMap(([processId, reqs]) =>
-        reqs.map((r) => ({ ...r, processId }))
-      ),
-    []
-  );
-
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (category === 'proceso') {
-      return ALL_PROCESSES.filter((p) => !q || p.name.toLowerCase().includes(q));
-    }
-    return requirementEntries.filter(
-      (r) => !q || r.desc.toLowerCase().includes(q) || r.id.toLowerCase().includes(q) || r.responsable.toLowerCase().includes(q)
-    );
-  }, [query, category, requirementEntries]);
+  const results = useMemo(() => searchByCategory(index, category, query), [index, category, query]);
 
   return (
     <>
@@ -92,32 +77,18 @@ export default function AuditMode() {
           {results.length === 0 && (
             <p className="il-text-body" style={{ padding: '18px 20px' }}>Sin resultados para esta búsqueda.</p>
           )}
-          {category === 'proceso'
-            ? results.map((p) => (
-                <button
-                  key={p.id}
-                  className="il-table-row"
-                  style={{ gridTemplateColumns: '1fr 140px 140px', display: 'grid' }}
-                  onClick={() => navigate(`/procesos/${p.id}`)}
-                >
-                  <span style={{ fontWeight: 600 }}>{p.name}</span>
-                  <ClauseTag>ISO {p.clause}</ClauseTag>
-                  <StatusBadge status={processStatus(p)} />
-                </button>
-              ))
-            : results.map((r, i) => (
-                <button
-                  key={`${r.id}-${i}`}
-                  className="il-table-row"
-                  style={{ gridTemplateColumns: '100px 1fr 130px 120px', display: 'grid' }}
-                  onClick={() => navigate(`/procesos/${r.processId}`)}
-                >
-                  <ClauseTag>{r.id}</ClauseTag>
-                  <span>{r.desc}</span>
-                  <span className="il-text-small">{r.responsable}</span>
-                  <StatusBadge status={r.estado} />
-                </button>
-              ))}
+          {results.map((r, i) => (
+            <button
+              key={`${r.label}-${i}`}
+              className="il-table-row"
+              style={{ gridTemplateColumns: '150px 1fr 130px', display: 'grid' }}
+              onClick={() => navigate(r.to)}
+            >
+              <ClauseTag>{r.type}</ClauseTag>
+              <span>{r.label}</span>
+              <span className="il-text-small">{r.meta ?? '—'}</span>
+            </button>
+          ))}
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -138,6 +109,9 @@ export default function AuditMode() {
                 <span className="il-text-meta">{t.ruta}</span>
               </div>
             ))}
+            <button className="il-btn il-btn--ghost" style={{ alignSelf: 'flex-start' }} onClick={() => navigate('/trazabilidad')}>
+              Ver explorador completo <Icon name="arrowRight" size={14} />
+            </button>
           </div>
         </div>
       </div>

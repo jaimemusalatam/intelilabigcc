@@ -52,6 +52,8 @@ export const PROCESS_GROUPS = [
       { id: 'reactivos', name: 'Reactivos', clause: '6.6', icon: 'matraz', percent: 96, alerts: 0 },
       { id: 'proveedores', name: 'Proveedores', clause: '6.7 – 6.8', icon: 'manos', percent: 91, alerts: 2 },
       { id: 'ti', name: 'Tecnología de Información', clause: '7.6', icon: 'monitor', percent: 95, alerts: 0 },
+      { id: 'reclamos', name: 'Reclamos y Quejas', clause: '—', icon: 'campana', percent: 90, alerts: 0 },
+      { id: 'continuidad', name: 'Continuidad y Emergencias', clause: '—', icon: 'escudoCheck', percent: 78, alerts: 1 },
     ],
   },
   {
@@ -107,6 +109,10 @@ export const NAV_ITEMS = [
   { to: '/nc-capa', label: 'NC / CAPA', icon: 'alerta', badge: 3 },
   { to: '/auditorias', label: 'Auditorías', icon: 'portapapeles' },
   { to: '/revision-direccion', label: 'Revisión Dirección', icon: 'personas' },
+  { to: '/alertas', label: 'Central de Alertas', icon: 'campana' },
+  { to: '/reportes', label: 'Reportes', icon: 'download' },
+  { to: '/trazabilidad', label: 'Trazabilidad', icon: 'link' },
+  { to: '/configuracion', label: 'Configuración', icon: 'config' },
 ];
 
 // ---------------------------------------------------------------------------

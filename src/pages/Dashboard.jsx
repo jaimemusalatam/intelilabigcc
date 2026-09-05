@@ -6,20 +6,50 @@ import { ComplianceRing, ComplianceRingLegend } from '../components/ComplianceRi
 import { Icon } from '../components/icons';
 import { AuditModeButton } from '../components/Button';
 import { PROCESS_GROUPS, COMPLIANCE_SUMMARY } from '../data/mock';
+import { dashboardKpis } from '../data/kpis';
 
 const QUICK_LINKS = [
   { label: 'Indicadores', icon: 'barras', to: '/indicadores' },
-  { label: 'Documentos', icon: 'doc', to: '/' },
+  { label: 'Documentos', icon: 'doc', to: '/procesos/documental' },
   { label: 'Auditorías', icon: 'portapapeles', to: '/auditorias' },
   { label: 'Revisión Dirección', icon: 'personas', to: '/revision-direccion' },
+  { label: 'Central de Alertas', icon: 'campana', to: '/alertas' },
+  { label: 'Reportes', icon: 'download', to: '/reportes' },
+];
+
+const KPI_TILES = [
+  { key: 'actividadesVencidas', label: 'Actividades vencidas', icon: 'alerta', color: 'var(--il-no-cumplido)' },
+  { key: 'actividadesProximas', label: 'Actividades próximas', icon: 'reloj', color: 'var(--il-progreso)' },
+  { key: 'ncAbiertas', label: 'No conformidades abiertas', icon: 'alerta', color: 'var(--il-no-cumplido)' },
+  { key: 'documentosPorRevisar', label: 'Documentos por revisar', icon: 'doc', color: 'var(--il-progreso)' },
+  { key: 'competenciasVencidas', label: 'Competencias vencidas', icon: 'personas', color: 'var(--il-no-cumplido)' },
+  { key: 'mantenimientosVencidos', label: 'Mantenimientos vencidos', icon: 'monitor', color: 'var(--il-no-cumplido)' },
+  { key: 'calibracionesVencidas', label: 'Calibraciones vencidas', icon: 'diana', color: 'var(--il-no-cumplido)' },
+  { key: 'eqaPendientes', label: 'EQA pendientes', icon: 'medalla', color: 'var(--il-progreso)' },
 ];
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const kpis = dashboardKpis();
 
   return (
     <>
       <PageHeader title="Mapa de Procesos ISO 15189:2022" subtitle="Sistema inteligente para gestión y cumplimiento" />
+
+      <div className="il-panel">
+        <span className="il-panel__title">KPI generales</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 16 }}>
+          {KPI_TILES.map((k) => (
+            <div key={k.key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Icon name={k.icon} size={18} color={k.color} strokeWidth={1.8} />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: 20, fontWeight: 700 }}>{kpis[k.key]}</span>
+                <span className="il-text-small">{k.label}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24, alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
