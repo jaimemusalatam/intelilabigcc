@@ -1,0 +1,74 @@
+/* InteliLab IGCC — tokens
+   Fuente canónica: design-system/tokens.css del paquete de handoff.
+   No editar valores aquí sin actualizar también el .dc.html de origen. */
+
+:root {
+  /* Marca */
+  --il-red: #D80A1D;
+  --il-red-hover: #B21014;
+  --il-red-press: #8E0D10;
+  --il-red-soft: #FEF2F3;
+  --il-red-border: #F7C9CE;
+
+  /* Grafito (navegación) */
+  --il-graphite-900: #21272D;
+  --il-graphite-800: #2E353D;
+  --il-graphite-700: #3A424B;
+  --il-graphite-500: #6B7480;
+
+  /* Neutrales */
+  --il-ink: #0F1215;
+  --il-ink-2: #4A525B;
+  --il-ink-3: #8A929B;
+  --il-border: #E3E6E9;
+  --il-border-strong: #CFD5DA;
+  --il-bg: #F4F6F7;
+  --il-surface: #FFFFFF;
+
+  /* Estados de cumplimiento (semánticos, no decorativos) */
+  --il-cumplido: #1B9020;
+  --il-cumplido-soft: #EDF7ED;
+  --il-cumplido-fg: #146D19;
+  --il-progreso: #F56016;
+  --il-progreso-soft: #FEF3EA;
+  --il-progreso-fg: #B8480F;
+  --il-no-cumplido: #D80A1D;
+  --il-no-cumplido-soft: #FEF2F3;
+  --il-no-cumplido-fg: #A80C17;
+  --il-vencido: #8E0D10;
+  --il-no-aplica: #8A929B;
+  --il-no-aplica-soft: #EEF1F3;
+
+  /* Tipografía */
+  --il-font-ui: 'Archivo', system-ui, sans-serif;
+  --il-font-data: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Espaciado — escala de 4 */
+  --il-s1: 4px;
+  --il-s2: 8px;
+  --il-s3: 12px;
+  --il-s4: 16px;
+  --il-s5: 20px;
+  --il-s6: 24px;
+  --il-s8: 32px;
+  --il-s10: 40px;
+
+  /* Radios */
+  --il-r-sm: 4px;
+  --il-r-md: 8px;
+  --il-r-lg: 12px;
+  --il-r-xl: 16px;
+  --il-r-full: 999px;
+
+  /* Elevación */
+  --il-e0: none;
+  --il-e1: 0 1px 2px rgba(15, 18, 21, .06);
+  --il-e2: 0 2px 8px rgba(15, 18, 21, .08);
+  --il-e3: 0 8px 24px rgba(15, 18, 21, .10);
+  --il-e-red: 0 4px 14px rgba(216, 10, 29, .28);
+
+  /* Alturas de control */
+  --il-h-sm: 32px;
+  --il-h-md: 40px;
+  --il-h-lg: 48px;
+}
