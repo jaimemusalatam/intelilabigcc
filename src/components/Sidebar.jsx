@@ -1,11 +1,13 @@
 import { NavLink } from 'react-router-dom';
 import { Icon } from './icons';
 import { NAV_ITEMS } from '../data/mock';
+import { useSidebar } from '../context/SidebarContext';
 
 export function Sidebar({ theme = 'graphite' }) {
   const isLight = theme === 'light';
+  const { isOpen, close } = useSidebar();
   return (
-    <aside className={`il-sidebar il-sidebar--${theme}`}>
+    <aside className={`il-sidebar il-sidebar--${theme} ${isOpen ? 'il-sidebar--open' : ''}`.trim()}>
       <div className="il-sidebar__brand">
         <svg width="26" height="29" viewBox="0 0 42 46" fill="none" stroke={isLight ? 'var(--il-red)' : '#fff'} strokeWidth="2.4" strokeLinejoin="round">
           <path d="M21 2.5 38.5 12v22L21 43.5 3.5 34V12z" />
@@ -23,6 +25,7 @@ export function Sidebar({ theme = 'graphite' }) {
             key={item.to}
             to={item.to}
             end={item.to === '/'}
+            onClick={close}
             className={({ isActive }) =>
               `il-navitem il-navitem--${theme} ${isActive ? 'il-navitem--active' : ''}`.trim()
             }

@@ -83,6 +83,10 @@ export default function Login() {
           <button className="il-btn il-btn--primary il-login__submit" type="submit">
             Ingresar
           </button>
+
+          <a className="il-login__forgot" href="mailto:soporte@intelilab.pe?subject=Recuperar%20acceso%20IGCC">
+            ¿Olvidaste tu contraseña? Contacta a soporte
+          </a>
         </form>
 
         <div className="il-login__footer">
