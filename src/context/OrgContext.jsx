@@ -1,34 +1,17 @@
-import { createContext, useContext, useMemo, useState } from 'react';
-import { useLocalCollection } from '../lib/storage';
+import { createContext, useContext, useMemo } from 'react';
+import { makeId, usePersistedState, useLocalCollection } from '../lib/storage';
 import { ORG_TREE_SEED } from '../data/org';
 
 const OrgContext = createContext(null);
 
 export function OrgProvider({ children }) {
-  const { items, setItems } = useLocalCollection('org-tree', ORG_TREE_SEED);
-  const tree = Array.isArray(items) ? ORG_TREE_SEED : items;
-
-  const [sedeId, setSedeId] = useState(() => {
-    try {
-      return localStorage.getItem('il-active-sede') ?? tree.sedes[0]?.id;
-    } catch {
-      return tree.sedes[0]?.id;
-    }
-  });
-
-  const setSede = (id) => {
-    setSedeId(id);
-    try {
-      localStorage.setItem('il-active-sede', id);
-    } catch {
-      /* almacenamiento no disponible */
-    }
-  };
+  const { items: tree, setItems } = useLocalCollection('org-tree', ORG_TREE_SEED);
+  const [sedeId, setSede] = usePersistedState('il-active-sede', tree.sedes[0]?.id);
 
   const addSede = (name) => {
     setItems((prev) => ({
       ...prev,
-      sedes: [...prev.sedes, { id: `sede-${Date.now()}`, name, areas: [] }],
+      sedes: [...prev.sedes, { id: makeId('sede'), name, areas: [] }],
     }));
   };
 
@@ -36,7 +19,7 @@ export function OrgProvider({ children }) {
     setItems((prev) => ({
       ...prev,
       sedes: prev.sedes.map((s) =>
-        s.id === targetSedeId ? { ...s, areas: [...s.areas, { id: `area-${Date.now()}`, name }] } : s
+        s.id === targetSedeId ? { ...s, areas: [...s.areas, { id: makeId('area'), name }] } : s
       ),
     }));
   };

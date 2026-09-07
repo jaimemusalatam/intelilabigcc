@@ -1,26 +1,11 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo } from 'react';
+import { usePersistedState } from '../lib/storage';
 import { ROLES, canRole, findRole } from '../data/roles';
 
 const RoleContext = createContext(null);
-const STORAGE_KEY = 'il-active-role';
 
 export function RoleProvider({ children }) {
-  const [roleId, setRoleId] = useState(() => {
-    try {
-      return localStorage.getItem(STORAGE_KEY) ?? 'calidad';
-    } catch {
-      return 'calidad';
-    }
-  });
-
-  const setRole = (id) => {
-    setRoleId(id);
-    try {
-      localStorage.setItem(STORAGE_KEY, id);
-    } catch {
-      /* almacenamiento no disponible */
-    }
-  };
+  const [roleId, setRole] = usePersistedState('il-active-role', 'calidad');
 
   const value = useMemo(
     () => ({

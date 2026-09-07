@@ -285,6 +285,16 @@ export function specialRecordsFor(processId) {
   return SPECIAL_RECORDS[processId] ?? [];
 }
 
+// Deriva una etiqueta legible para una fila de SPECIAL_RECORDS, cuyo shape
+// varía por bloque (persona, equipo, proveedor, riesgo, etc.).
+export function labelForRow(row) {
+  return (
+    row.nombre ?? row.equipo ?? row.persona ?? row.proveedor ?? row.analito ?? row.reactivo ??
+    row.reclamo ?? row.riesgo ?? row.mejora ?? row.subproceso ?? row.codigo ?? row.metodo ??
+    row.programa ?? row.tipo ?? 'Registro'
+  );
+}
+
 // Puntos de control diarios para las gráficas Levey-Jennings del bloque
 // "Control interno de calidad" (media, ±1DE, ±2DE, ±3DE).
 export const LJ_SERIES = {

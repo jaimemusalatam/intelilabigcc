@@ -9,7 +9,7 @@ import { Button } from '../components/Button';
 import { SpecialRecordsPanel } from '../components/SpecialRecordsPanel';
 import { findProcess, processStatus, requirementsFor, INDICATORS } from '../data/mock';
 import { specialRecordsFor } from '../data/specialRecords';
-import { useLocalCollection, logAction, useAuditLog } from '../lib/storage';
+import { useLocalCollection, logAction, useAuditLog, makeId } from '../lib/storage';
 import { useAuth } from '../context/AuthContext';
 
 const DOCS_SEED = [
@@ -64,14 +64,14 @@ export default function ProcessDetail() {
 
   const handleUpload = (collection, file) => {
     if (!file) return;
-    collection.add({ id: `f-${Date.now()}`, nombre: file.name, tipo: 'Documento', estado: 'Vigente', version: 'v1.0' });
+    collection.add({ id: makeId('f'), nombre: file.name, tipo: 'Documento', estado: 'Vigente', version: 'v1.0' });
     logAction({ usuario: user?.name ?? 'Usuario', accion: `Subió el documento «${file.name}»`, elemento: process.name });
   };
 
   const handleGenerateRecord = () => {
     const nombre = window.prompt('Nombre del registro a generar:');
     if (!nombre) return;
-    registros.add({ id: `r-${Date.now()}`, nombre, tipo: 'Registro', estado: 'Vigente' });
+    registros.add({ id: makeId('r'), nombre, tipo: 'Registro', estado: 'Vigente' });
     logAction({ usuario: user?.name ?? 'Usuario', accion: `Generó el registro «${nombre}»`, elemento: process.name });
   };
 

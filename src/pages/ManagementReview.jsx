@@ -5,7 +5,7 @@ import { StatusBadge, ClauseTag } from '../components/Badge';
 import { Icon } from '../components/icons';
 import { Button } from '../components/Button';
 import { MANAGEMENT_REVIEW_INPUTS, MANAGEMENT_REVIEW_AGREEMENTS } from '../data/mock';
-import { useLocalCollection, logAction } from '../lib/storage';
+import { useLocalCollection, logAction, formatDate } from '../lib/storage';
 import { useAuth } from '../context/AuthContext';
 
 export default function ManagementReview() {
@@ -22,7 +22,7 @@ export default function ManagementReview() {
     const decision = window.prompt('Decisión / acción acordada:');
     if (!decision) return;
     const id = `ACU-${new Date().getFullYear()}-${String(agreements.length + 1).padStart(2, '0')}`;
-    add({ id, decision, responsable: user?.name ?? 'Usuario', fecha: new Date().toLocaleDateString('es-PE'), estado: 'progreso' });
+    add({ id, decision, responsable: user?.name ?? 'Usuario', fecha: formatDate(), estado: 'progreso' });
     logAction({ usuario: user?.name ?? 'Usuario', accion: `Registró el acuerdo ${id}`, elemento: 'Revisión Dirección', valorNuevo: decision });
   };
 
@@ -56,7 +56,7 @@ export default function ManagementReview() {
       {actaGenerada && (
         <section className="il-panel" style={{ border: '1px solid var(--il-red-border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <SectionHeader icon="doc">Acta de Revisión por la Dirección — {new Date().toLocaleDateString('es-PE')}</SectionHeader>
+            <SectionHeader icon="doc">Acta de Revisión por la Dirección — {formatDate()}</SectionHeader>
             <Button variant="secondary" onClick={() => window.print()}><Icon name="download" size={15} /> Descargar / imprimir</Button>
           </div>
           <p className="il-text-body">

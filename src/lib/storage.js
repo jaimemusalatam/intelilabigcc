@@ -14,6 +14,45 @@ function read(key, seed) {
   }
 }
 
+let idCounter = 0;
+
+// Genera un id legible y único dentro de la sesión (prefijo + timestamp +
+// contador) para entidades creadas desde la UI (sedes, áreas, documentos…).
+export function makeId(prefix) {
+  idCounter += 1;
+  return `${prefix}-${Date.now()}-${idCounter}`;
+}
+
+export function formatDate(date = new Date()) {
+  return date.toLocaleDateString('es-PE');
+}
+
+// Estado persistido en localStorage bajo una clave simple (string), con
+// fallback a `initial` si no hay valor guardado o el almacenamiento falla.
+export function usePersistedState(key, initial) {
+  const [value, setValue] = useState(() => {
+    try {
+      return localStorage.getItem(key) ?? initial;
+    } catch {
+      return initial;
+    }
+  });
+
+  const set = useCallback(
+    (next) => {
+      setValue(next);
+      try {
+        localStorage.setItem(key, next);
+      } catch {
+        /* almacenamiento no disponible */
+      }
+    },
+    [key]
+  );
+
+  return [value, set];
+}
+
 export function useLocalCollection(key, seed = []) {
   const storageKey = `il-data:${key}`;
   const [items, setItems] = useState(() => read(storageKey, seed));
@@ -73,9 +112,9 @@ export function seedAuditLog(seed) {
 export function logAction({ usuario, accion, elemento, valorAnterior = '—', valorNuevo = '—' }) {
   const now = new Date();
   const entry = {
-    id: `LOG-${now.getTime()}`,
+    id: makeId('LOG'),
     usuario,
-    fecha: now.toLocaleDateString('es-PE'),
+    fecha: formatDate(now),
     hora: now.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }),
     accion,
     elemento,

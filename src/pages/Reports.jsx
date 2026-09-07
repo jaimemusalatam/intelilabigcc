@@ -3,15 +3,10 @@ import { SectionHeader } from '../components/SectionHeader';
 import { Button } from '../components/Button';
 import { Icon } from '../components/icons';
 import { ALL_PROCESSES, NC_LIST, AUDITS, INDICATORS } from '../data/mock';
-import { SPECIAL_RECORDS } from '../data/specialRecords';
-import { buildCentralAlerts } from '../data/kpis';
+import { buildCentralAlerts, rowsForBlock } from '../data/kpis';
 import { downloadCSV } from '../lib/exports';
 import { logAction } from '../lib/storage';
 import { useAuth } from '../context/AuthContext';
-
-function rowsForBlockKey(blockKey) {
-  return Object.values(SPECIAL_RECORDS).flat().filter((b) => b.key === blockKey).flatMap((b) => b.seed);
-}
 
 function buildReport(key) {
   switch (key) {
@@ -20,17 +15,17 @@ function buildReport(key) {
     case 'estado-cumplimiento':
       return { filename: 'estado-cumplimiento', rows: ALL_PROCESSES.map((p) => ({ ...p, estado: p.estado ?? (p.percent >= 90 ? 'Cumplido' : p.percent >= 70 ? 'En progreso' : 'No cumplido') })), columns: [{ key: 'name', label: 'Proceso' }, { key: 'estado', label: 'Estado' }, { key: 'percent', label: '%' }] };
     case 'equipos':
-      return { filename: 'equipos', rows: rowsForBlockKey('listado-equipos'), columns: [{ key: 'codigo', label: 'Código' }, { key: 'nombre', label: 'Equipo' }, { key: 'ubicacion', label: 'Ubicación' }, { key: 'estado', label: 'Estado' }] };
+      return { filename: 'equipos', rows: rowsForBlock('listado-equipos'), columns: [{ key: 'codigo', label: 'Código' }, { key: 'nombre', label: 'Equipo' }, { key: 'ubicacion', label: 'Ubicación' }, { key: 'estado', label: 'Estado' }] };
     case 'mantenimientos':
-      return { filename: 'mantenimientos', rows: rowsForBlockKey('mantenimiento'), columns: [{ key: 'equipo', label: 'Equipo' }, { key: 'tipo', label: 'Tipo' }, { key: 'proximo', label: 'Próximo' }, { key: 'estado', label: 'Estado' }] };
+      return { filename: 'mantenimientos', rows: rowsForBlock('mantenimiento'), columns: [{ key: 'equipo', label: 'Equipo' }, { key: 'tipo', label: 'Tipo' }, { key: 'proximo', label: 'Próximo' }, { key: 'estado', label: 'Estado' }] };
     case 'calibraciones':
-      return { filename: 'calibraciones', rows: rowsForBlockKey('calibracion'), columns: [{ key: 'equipo', label: 'Equipo' }, { key: 'patron', label: 'Patrón' }, { key: 'proxima', label: 'Próxima' }, { key: 'estado', label: 'Estado' }] };
+      return { filename: 'calibraciones', rows: rowsForBlock('calibracion'), columns: [{ key: 'equipo', label: 'Equipo' }, { key: 'patron', label: 'Patrón' }, { key: 'proxima', label: 'Próxima' }, { key: 'estado', label: 'Estado' }] };
     case 'capacitaciones':
-      return { filename: 'capacitaciones', rows: rowsForBlockKey('capacitacion'), columns: [{ key: 'tema', label: 'Tema' }, { key: 'responsable', label: 'Responsable' }, { key: 'fecha', label: 'Fecha' }, { key: 'estado', label: 'Estado' }] };
+      return { filename: 'capacitaciones', rows: rowsForBlock('capacitacion'), columns: [{ key: 'tema', label: 'Tema' }, { key: 'responsable', label: 'Responsable' }, { key: 'fecha', label: 'Fecha' }, { key: 'estado', label: 'Estado' }] };
     case 'competencias':
-      return { filename: 'competencias', rows: rowsForBlockKey('competencia'), columns: [{ key: 'persona', label: 'Persona' }, { key: 'competencia', label: 'Competencia' }, { key: 'vigencia', label: 'Vigente hasta' }, { key: 'estado', label: 'Estado' }] };
+      return { filename: 'competencias', rows: rowsForBlock('competencia'), columns: [{ key: 'persona', label: 'Persona' }, { key: 'competencia', label: 'Competencia' }, { key: 'vigencia', label: 'Vigente hasta' }, { key: 'estado', label: 'Estado' }] };
     case 'riesgos':
-      return { filename: 'riesgos', rows: rowsForBlockKey('matriz-riesgos'), columns: [{ key: 'proceso', label: 'Proceso' }, { key: 'riesgo', label: 'Riesgo' }, { key: 'nivel', label: 'Nivel' }, { key: 'estado', label: 'Estado' }] };
+      return { filename: 'riesgos', rows: rowsForBlock('matriz-riesgos'), columns: [{ key: 'proceso', label: 'Proceso' }, { key: 'riesgo', label: 'Riesgo' }, { key: 'nivel', label: 'Nivel' }, { key: 'estado', label: 'Estado' }] };
     case 'nc':
       return { filename: 'no-conformidades', rows: NC_LIST, columns: [{ key: 'id', label: 'ID' }, { key: 'proceso', label: 'Proceso' }, { key: 'desc', label: 'Descripción' }, { key: 'estado', label: 'Estado' }, { key: 'due', label: 'Fecha límite' }] };
     case 'acciones':

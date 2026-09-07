@@ -2,22 +2,17 @@
 // coincidencias entre procesos, requisitos, documentos, equipos,
 // calibraciones, riesgos, NC y registros.
 import { ALL_PROCESSES, REQUIREMENTS_BY_PROCESS, NC_LIST, INDICATORS } from '../data/mock';
-import { SPECIAL_RECORDS } from '../data/specialRecords';
-
-function rowLabel(row) {
-  return row.nombre ?? row.equipo ?? row.persona ?? row.proveedor ?? row.analito ?? row.reactivo ?? row.reclamo ?? row.riesgo ?? row.mejora ?? row.subproceso ?? row.codigo ?? row.metodo ?? row.programa ?? 'Registro';
-}
+import { SPECIAL_RECORDS, labelForRow } from '../data/specialRecords';
 
 const EQUIPO_BLOCKS = ['listado-equipos', 'mantenimiento', 'calibracion'];
 const METODO_BLOCKS = ['metodos', 'verificacion-cuantitativa', 'verificacion-cualitativa', 'incertidumbre', 'eqa'];
 const PERSONA_BLOCKS = ['hoja-vida', 'induccion', 'competencia', 'capacitacion', 'compromisos-imparcialidad', 'compromisos-confidencialidad', 'conflictos-interes'];
-const DOCUMENTO_BLOCKS = ['listado-maestro'];
 
+// El resto de bloques (p. ej. listado-maestro) cae en 'documento' por defecto.
 function categoryForBlock(key) {
   if (EQUIPO_BLOCKS.includes(key)) return 'equipo';
   if (METODO_BLOCKS.includes(key)) return 'metodo';
   if (PERSONA_BLOCKS.includes(key)) return 'persona';
-  if (DOCUMENTO_BLOCKS.includes(key)) return 'documento';
   return 'documento';
 }
 
@@ -37,7 +32,7 @@ export function buildSearchIndex() {
   Object.entries(SPECIAL_RECORDS).forEach(([processId, blocks]) => {
     blocks.forEach((block) => {
       block.seed.forEach((row) => {
-        index.push({ category: categoryForBlock(block.key), type: block.title, label: rowLabel(row), meta: row.estado, to: `/procesos/${processId}` });
+        index.push({ category: categoryForBlock(block.key), type: block.title, label: labelForRow(row), meta: row.estado, to: `/procesos/${processId}` });
       });
     });
   });

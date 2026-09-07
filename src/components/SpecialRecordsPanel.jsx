@@ -4,7 +4,7 @@ import { Button } from './Button';
 import { Icon } from './icons';
 import { LJChart } from './LJChart';
 import { LJ_SERIES } from '../data/specialRecords';
-import { useLocalCollection, logAction } from '../lib/storage';
+import { useLocalCollection, logAction, makeId } from '../lib/storage';
 import { useRole } from '../context/RoleContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -34,7 +34,7 @@ export function SpecialRecordsBlock({ processId, block }) {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    const entry = { id: `${block.key}-${Date.now()}`, ...draft };
+    const entry = { id: makeId(block.key), ...draft };
     add(entry);
     logAction({
       usuario: user?.name ?? 'Usuario',

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../components/PageHeader';
 import { SectionHeader } from '../components/SectionHeader';
@@ -30,7 +31,7 @@ const KPI_TILES = [
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const kpis = dashboardKpis();
+  const kpis = useMemo(() => dashboardKpis(), []);
 
   return (
     <>

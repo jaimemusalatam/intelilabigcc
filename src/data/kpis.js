@@ -2,9 +2,9 @@
 // actividades vencidas/próximas, NC abiertas, acciones vencidas, documentos
 // por revisar, competencias/mantenimientos/calibraciones vencidas, EQA pendientes.
 import { NC_LIST, AUDITS, ALL_PROCESSES } from './mock';
-import { SPECIAL_RECORDS } from './specialRecords';
+import { SPECIAL_RECORDS, labelForRow } from './specialRecords';
 
-function rowsForBlock(blockKey) {
+export function rowsForBlock(blockKey) {
   return Object.values(SPECIAL_RECORDS)
     .flat()
     .filter((b) => b.key === blockKey)
@@ -34,13 +34,10 @@ export function dashboardKpis() {
 
 const CONCERNING = /vencid|pr[oó]xima|pendiente|abierto|fuera de servicio|fuera de meta/i;
 
-function processNameFor(processId) {
-  return ALL_PROCESSES.find((p) => p.id === processId)?.name ?? processId;
-}
-
 // Central de Alertas: NO existen alertas independientes por módulo — esta
 // función centraliza todas las alertas por proceso y requisito de la norma.
 export function buildCentralAlerts() {
+  const processNames = new Map(ALL_PROCESSES.map((p) => [p.id, p.name]));
   const alerts = [];
 
   ALL_PROCESSES.forEach((p) => {
@@ -62,12 +59,11 @@ export function buildCentralAlerts() {
       block.seed
         .filter((row) => CONCERNING.test(String(row.estado ?? '')))
         .forEach((row) => {
-          const label = row.persona ?? row.equipo ?? row.proveedor ?? row.analito ?? row.tipo ?? row.reactivo ?? row.reclamo ?? row.riesgo ?? row.mejora ?? row.subproceso ?? 'Registro';
           alerts.push({
             id: row.id,
-            proceso: processNameFor(processId),
+            proceso: processNames.get(processId) ?? processId,
             tipo: block.title,
-            descripcion: `${label} — ${row.estado}`,
+            descripcion: `${labelForRow(row)} — ${row.estado}`,
             estado: /vencid/i.test(row.estado) ? 'no-cumplido' : 'progreso',
             to: `/procesos/${processId}`,
           });

@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useClickOutside } from '../lib/useClickOutside';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from './icons';
 import { GlobalSearch } from './GlobalSearch';
@@ -18,22 +19,15 @@ export function PageHeader({ title, subtitle }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const menuRef = useRef(null);
-  const notifRef = useRef(null);
+  const menuRef = useClickOutside(menuOpen, () => setMenuOpen(false));
+  const notifRef = useClickOutside(notifOpen, () => setNotifOpen(false));
 
   const alerts = useMemo(() => buildCentralAlerts(), []);
   const { items: dismissed, add: dismiss } = useLocalCollection('notifications-dismissed', []);
-  const pending = alerts.filter((a) => !dismissed.some((d) => d.id === a.id));
-
-  useEffect(() => {
-    if (!menuOpen && !notifOpen) return;
-    const handleClickOutside = (e) => {
-      if (menuOpen && menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
-      if (notifOpen && notifRef.current && !notifRef.current.contains(e.target)) setNotifOpen(false);
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [menuOpen, notifOpen]);
+  const pending = useMemo(() => {
+    const dismissedIds = new Set(dismissed.map((d) => d.id));
+    return alerts.filter((a) => !dismissedIds.has(a.id));
+  }, [alerts, dismissed]);
 
   useEffect(() => {
     const handleKey = (e) => {
